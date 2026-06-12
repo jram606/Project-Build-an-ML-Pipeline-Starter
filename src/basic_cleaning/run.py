@@ -34,8 +34,9 @@ def go(args):
     logger.info("Converting last_review to datetime")
     df["last_review"] = pd.to_datetime(df["last_review"])
 
-    # Do not add the longitude/latitude filter yet.
-    # That fix is added later after release 1.0.0 fails on sample2.csv.
+    logger.info("Removing rows outside NYC longitude and latitude boundaries")
+    idx = df["longitude"].between(-74.25, -73.50) & df["latitude"].between(40.5, 41.2)
+    df = df[idx].copy()
 
     logger.info("Saving cleaned data")
     df.to_csv("clean_sample.csv", index=False)
